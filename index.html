@@ -805,21 +805,37 @@ function renderSession(idx) {
   }).join('');
 
   document.getElementById('mainContent').innerHTML = `
-    ${statsHtml}
-    <div class="sec-label">暖身</div>
-    <div class="special-row">開始前請先活動各關節進行暖身</div>
-    <div class="sec-label">主訓練</div>
-    <div class="exercise-grid">${exHtml}</div>
-    <div class="stretch-card">🧘 收操伸展：訓練結束後請進行充分伸展，幫助肌肉放鬆與恢復。</div>
     <div class="photo-section" id="photoSection">
       <div class="photo-section-header">
         <div class="sec-label" style="margin-bottom:0">活動照片</div>
       </div>
       <div class="photo-content"></div>
     </div>
+    <div class="youtube-section">
+      <div class="sec-label">直播回放</div>
+      <div class="youtube-grid">
+        <div class="youtube-slot">
+          <input class="yt-input" id="yt1_${idx}" type="url" placeholder="貼上 YouTube 連結 1…"
+            value="${(s.youtube && s.youtube[0]) || ''}"
+            onchange="saveYoutube(${idx}, 0, this.value)">
+          <div class="yt-embed" id="ytEmbed1_${idx}"></div>
+        </div>
+        <div class="youtube-slot">
+          <input class="yt-input" id="yt2_${idx}" type="url" placeholder="貼上 YouTube 連結 2…"
+            value="${(s.youtube && s.youtube[1]) || ''}"
+            onchange="saveYoutube(${idx}, 1, this.value)">
+          <div class="yt-embed" id="ytEmbed2_${idx}"></div>
+        </div>
+      </div>
+    </div>
+    ${statsHtml}
+    <div class="sec-label">暖身</div>
+    <div class="special-row">開始前請先活動各關節進行暖身</div>
+    <div class="sec-label">主訓練</div>
+    <div class="exercise-grid">${exHtml}</div>
+    <div class="stretch-card">🧘 收操伸展：訓練結束後請進行充分伸展，幫助肌肉放鬆與恢復。</div>
   `;
-  renderPhotos(idx);
-}
+  renderYoutube(idx);
 
 function toggleEx(header) {
   const body = header.nextElementSibling;
