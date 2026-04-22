@@ -952,7 +952,67 @@ function closeSidebar() {
   document.getElementById('sidebar').classList.remove('open');
 }
 
+// ── YOUTUBE MODULE ────────────────────────────────────────────────────────
+const YT_KEY = 'fuxing_youtube_v1';
 
+function loadYoutubeData() {
+  try { return JSON.parse(localStorage.getItem(YT_KEY) || '{}'); } catch(e) { return {}; }
+}
+function saveYoutubeData(obj) {
+  try { localStorage.setItem(YT_KEY, JSON.stringify(obj)); } catch(e) {}
+}
+
+function saveYoutube(idx, slot, url) {
+  const data = loadYoutubeData();
+  const key = SESSIONS[idx].date;
+  if (!data[key]) data[key] = ['', ''];
+  data[key][slot] = url.trim();
+  saveYoutubeData(data);
+  renderYoutubeEmbed(idx, slot, url.trim());
+}
+
+function toYoutubeEmbedUrl(url) {
+  if (!url) return '';
+  // 支援 youtu.be/xxx、youtube.com/watch?v=xxx、youtube.com/live/xxx
+  let id = '';
+  const m1 = url.match(/youtu\.be\/([^?&]+)/);
+  const m2 = url.match(/[?&]v=([^?&]+)/);
+  const m3 = url.match(/youtube\.com\/live\/([^?&]+)/);
+  const m4 = url.match(/youtube\.com\/shorts\/([^?&]+)/);
+  if (m1) id = m1[1];
+  else if (m2) id = m2[1];
+  else if (m3) id = m3[1];
+  else if (m4) id = m4[1];
+  return id ? `https://www.youtube.com/embed/${id}` : '';
+}
+
+function renderYoutubeEmbed(idx, slot, url) {
+  const embedId = slot === 0 ? `ytEmbed1_${idx}` : `ytEmbed2_${idx}`;
+  const el = document.getElementById(embedId);
+  if (!el) return;
+  const embedUrl = toYoutubeEmbedUrl(url);
+  if (embedUrl) {
+    el.innerHTML = `<iframe src="${embedUrl}" allowfullscreen
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture">
+    </iframe>`;
+  } else {
+    el.innerHTML = `<div class="yt-embed-empty">▶</div>`;
+  }
+}
+
+function renderYoutube(idx) {
+  const data = loadYoutubeData();
+  const key = SESSIONS[idx].date;
+  const urls = data[key] || ['', ''];
+  // 填回 input 值並渲染嵌入
+  [0, 1].forEach(slot => {
+    const inputEl = document.getElementById(slot === 0 ? `yt1_${idx}` : `yt2_${idx}`);
+    if (inputEl && urls[slot]) inputEl.value = urls[slot];
+    renderYoutubeEmbed(idx, slot, urls[slot] || '');
+  });
+}
+// ── END YOUTUBE MODULE ────────────────────────────────────────────────────
+  
 // ── GITHUB PHOTO MODULE ───────────────────────────────────────────────────
 // 設定：填入你的 GitHub 帳號與 repo 名稱
 const GH_USER   = 'giayama';   // ← 填你的 GitHub 帳號
