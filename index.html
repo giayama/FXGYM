@@ -6,6 +6,28 @@
 <title>福星健客</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Bebas+Neue&family=DM+Mono:wght@400;500&family=ZCOOL+XiaoWei&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
 <style>
+  /* 當螢幕寬度小於 768px 時（手機模式） */
+@media (max-width: 768px) {
+    body {
+        font-size: 17px; /* 將基底字體放大，17px 在手機上閱讀更舒適 */
+        line-height: 1.6; /* 稍微縮減行高，讓閱讀焦點更集中 */
+    }
+
+    /* 調整標題大小，避免手機上標題佔據太多版面 */
+    h1 { font-size: 1.5rem; }
+    h2 { font-size: 1.3rem; }
+
+    /* 確保內容不會貼邊，增加左右留白 */
+    .app {
+        padding: 0 10px; 
+    }
+
+    /* 如果有按鈕或選單，確保它們觸控面積足夠 */
+    button, .nav-item {
+        padding: 12px 15px; /* 增加觸控高度 */
+        font-size: 16px;    /* 防止 iOS Safari 在輸入時自動縮放 */
+    }
+}
   /* 修改或新增以下樣式 */
 .yt-embed {
     position: relative;
