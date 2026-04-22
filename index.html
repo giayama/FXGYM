@@ -1031,32 +1031,6 @@ function lbKeyHandler(e) {
   if (e.key === 'ArrowLeft')  lbNav(-1);
   if (e.key === 'ArrowRight') lbNav(1);
 }
-function updateLightbox() {
-  if (!lbPhotos.length) return;
-  document.getElementById('lightboxImg').src = lbPhotos[lbIdx];
-  document.getElementById('lightboxCaption').textContent =
-    `${SESSIONS[lbSessionIdx].label}　${lbIdx + 1} / ${lbPhotos.length}`;
-  document.querySelector('.lightbox-prev').style.display = lbPhotos.length > 1 ? 'flex' : 'none';
-  document.querySelector('.lightbox-next').style.display = lbPhotos.length > 1 ? 'flex' : 'none';
-}
-
-function closeLightbox(e) {
-  if (e && e.target !== document.getElementById('lightbox') && !e.target.classList.contains('lightbox-close')) return;
-  document.getElementById('lightbox').classList.remove('open');
-  document.removeEventListener('keydown', lbKeyHandler);
-}
-
-function lbNav(dir, e) {
-  if (e) e.stopPropagation();
-  lbIdx = (lbIdx + dir + lbPhotos.length) % lbPhotos.length;
-  updateLightbox();
-}
-
-function lbKeyHandler(e) {
-  if (e.key === 'Escape')      { closeLightbox(); }
-  if (e.key === 'ArrowLeft')   { lbNav(-1); }
-  if (e.key === 'ArrowRight')  { lbNav(1); }
-}
 
 function updateSidebarAlbumDot(idx, hasPhotos) {
   const item = document.getElementById(`si-${idx}`);
