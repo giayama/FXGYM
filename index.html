@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>福星健身紀錄</title>
+<title>福星健客</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Bebas+Neue&family=DM+Mono:wght@400;500&family=ZCOOL+XiaoWei&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -387,8 +387,9 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
   display: none; position: fixed; inset: 0; z-index: 999;
   background: rgba(0,0,0,0.93);
   align-items: center; justify-content: center; cursor: zoom-out;
+  opacity: 0; transition: opacity 0.2s;
 }
-.lightbox.open { display: flex; }
+.lightbox.open { opacity: 1; }
 .lightbox-img {
   max-width: 90vw; max-height: 88vh;
   border-radius: 8px; object-fit: contain; cursor: default;
@@ -956,11 +957,15 @@ async function renderPhotos(idx) {
     return;
   }
 
+  // 快取載入結果，供燈箱使用
+  loadedPhotos[idx] = loaded;
+
   // 渲染照片格
   const cells = Array.from({length: MAX_PHOTOS}, (_, i) => {
     const photo = loaded.find(p => p.n === i + 1);
     if (photo) {
-      return `<div class="photo-cell" onclick="openLightbox(${i}, ${idx})">
+      const urlIdx = loaded.indexOf(photo);
+      return `<div class="photo-cell" onclick="openLightbox(${urlIdx}, ${idx})">
         <img src="${photo.url}" alt="活動照片 ${i+1}" loading="lazy">
       </div>`;
     }
@@ -979,21 +984,53 @@ async function renderPhotos(idx) {
 }
 
 // ── 燈箱 ──────────────────────────────────────────────────────────────────
-let lbIdx = 0, lbSessionIdx = 0, lbPhotos = [];
+const loadedPhotos = {};
+let lbIdx = 0, lbSessionIdx = 0;
 
-async function openLightbox(photoIdx, sessionIdx) {
+function openLightbox(urlIdx, sessionIdx) {
   lbSessionIdx = sessionIdx;
-  const key = photoKey(sessionIdx);
-  // 重新收集已載入照片 URL
-  const section = document.getElementById('photoSection');
-  const imgs = section ? section.querySelectorAll('.photo-cell img') : [];
-  lbPhotos = Array.from(imgs).map(img => img.src);
-  lbIdx = Math.min(photoIdx, lbPhotos.length - 1);
+  const photos = loadedPhotos[sessionIdx] || [];
+  if (!photos.length) return;
+  lbIdx = Math.max(0, Math.min(urlIdx, photos.length - 1));
   updateLightbox();
-  document.getElementById('lightbox').classList.add('open');
+  const lb = document.getElementById('lightbox');
+  lb.style.display = 'flex';
+  requestAnimationFrame(() => lb.classList.add('open'));
   document.addEventListener('keydown', lbKeyHandler);
 }
 
+function updateLightbox() {
+  const photos = loadedPhotos[lbSessionIdx] || [];
+  if (!photos.length) return;
+  document.getElementById('lightboxImg').src = photos[lbIdx].url;
+  document.getElementById('lightboxCaption').textContent =
+    `${SESSIONS[lbSessionIdx].label}　${lbIdx + 1} / ${photos.length}`;
+  document.querySelector('.lightbox-prev').style.display = photos.length > 1 ? 'flex' : 'none';
+  document.querySelector('.lightbox-next').style.display = photos.length > 1 ? 'flex' : 'none';
+}
+
+function closeLightbox(e) {
+  if (e && e.target.closest('.lightbox-img')) return;
+  if (e && e.target.closest('.lightbox-nav')) return;
+  const lb = document.getElementById('lightbox');
+  lb.classList.remove('open');
+  setTimeout(() => { lb.style.display = 'none'; }, 200);
+  document.removeEventListener('keydown', lbKeyHandler);
+}
+
+function lbNav(dir, e) {
+  if (e) { e.stopPropagation(); e.preventDefault(); }
+  const photos = loadedPhotos[lbSessionIdx] || [];
+  if (!photos.length) return;
+  lbIdx = (lbIdx + dir + photos.length) % photos.length;
+  updateLightbox();
+}
+
+function lbKeyHandler(e) {
+  if (e.key === 'Escape')     closeLightbox();
+  if (e.key === 'ArrowLeft')  lbNav(-1);
+  if (e.key === 'ArrowRight') lbNav(1);
+}
 function updateLightbox() {
   if (!lbPhotos.length) return;
   document.getElementById('lightboxImg').src = lbPhotos[lbIdx];
@@ -1040,7 +1077,14 @@ renderSidebar();
 renderSession(0);
 </script>
 
-
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button class="lightbox-nav lightbox-prev" onclick="lbNav(-1,event)">‹</button>
+  <img class="lightbox-img" id="lightboxImg" src="" alt="活動照片">
+  <button class="lightbox-nav lightbox-next" onclick="lbNav(1,event)">›</button>
+  <div class="lightbox-caption" id="lightboxCaption"></div>
+</div>
 
 </body>
 </html>
