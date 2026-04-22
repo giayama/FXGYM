@@ -908,7 +908,7 @@ function renderSession(idx) {
     <div class="exercise-grid">${exHtml}</div>
     <div class="stretch-card">🧘 收操伸展：訓練結束後請進行充分伸展，幫助肌肉放鬆與恢復。</div>
   `;
-    setTimeout(() => renderYoutube(idx), 0);
+requestAnimationFrame(() => requestAnimationFrame(() => renderYoutube(idx)));
   renderPhotos(idx); 
 }
 function toggleEx(header) {
