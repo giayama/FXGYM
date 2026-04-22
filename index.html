@@ -671,6 +671,10 @@ const SESSIONS = [
   {
     date: "2026/04/17",
     label: "04.17",
+      youtube: [
+    "https://www.youtube.com/live/zGkOIG43_eU?si=0MXW5u68U2P7Ft_a",  // 第1部
+    "https://youtu.be/_kfAyyEE9gU?si=LNkPXT1Nl_MUqJ8u"   // 第2部（沒有就留空字串）
+  ],
     exercises: [
       { num:1, body:"腹", name:"站立側卷腹", reps:"左右 12/組", desc:"", note:"", link:"" },
       { num:2, body:"腹", name:"站立對側肘碰膝", reps:"左右 20/組", desc:"", note:"", link:"" },
@@ -685,6 +689,10 @@ const SESSIONS = [
   {
     date: "2026/04/10",
     label: "04.10",
+    youtube: [
+    "https://www.youtube.com/live/zfiD-WhFE_M?si=FCTft0rrTS1o0zgW",  // 第1部
+    "https://youtu.be/zCBf5sybsnQ"   // 第2部（沒有就留空字串）
+  ],
     exercises: [
       { num:1, body:"", name:"手臂畫圈", reps:"30/組", desc:"雙手在身體兩側平舉，手臂順時針、逆時針分別繞圈。", note:"", link:"https://youtu.be/140RTNMciH8" },
       { num:2, body:"胸", name:"推牆挺身", reps:"30 下", desc:"45度。想加強訓練胸部，雙手打開的寬度要比肩膀寬。", note:"", link:"" },
@@ -700,6 +708,10 @@ const SESSIONS = [
   {
     date: "2026/03/27",
     label: "03.27",
+        youtube: [
+    "https://www.youtube.com/live/xsvGtG4636U?si=BgTQ6VMFYgKlE6YH",  // 第1部
+    ""   // 第2部（沒有就留空字串）
+  ],
     exercises: [
       { num:1, body:"", name:"開合跳", reps:"", desc:"", note:"", link:"" },
       { num:2, body:"", name:"站立側彎側轉 肘碰膝", reps:"", desc:"", note:"", link:"https://www.facebook.com/share/v/1CBULo8Moo/" },
@@ -715,6 +727,10 @@ const SESSIONS = [
   {
     date: "2026/03/19",
     label: "03.19",
+            youtube: [
+    "https://www.youtube.com/live/RakohYlFVhc?si=NLINA-_2eoujbzTD",  // 第1部
+    ""   // 第2部（沒有就留空字串）
+  ],
     exercises: [
       { num:1, body:"", name:"寬站手拍膝", reps:"30 秒", desc:"", note:"", link:"https://youtu.be/5yu1InMtAa8" },
       { num:2, body:"", name:"抱頭肘碰膝", reps:"30 秒", desc:"", note:"", link:"https://youtu.be/5yu1InMtAa8" },
@@ -760,6 +776,10 @@ const SESSIONS = [
   {
     date: "2026/01/30",
     label: "01.30",
+                youtube: [
+    "https://www.youtube.com/live/IL1PghJttaU?si=EN3_gD6_EgTsBGnF",  // 第1部
+    ""   // 第2部（沒有就留空字串）
+  ],
     exercises: [
       { num:1, body:"腹部/心肺", name:"原地高抬腿", reps:"30 秒", desc:"暖身動作。訓練腹部、髖、大腿、臀、心肺。", note:"", link:"" },
       { num:2, body:"臀/腿/核心", name:"跨步深蹲", reps:"15 次", desc:"包含側跨步深蹲與交叉步下蹲。訓練臀、腿、核心。", note:"", link:"" },
@@ -1032,6 +1052,7 @@ function editYoutube(idx, slot) {
 function renderYoutube(idx) {
   const data = loadYoutubeData();
   const key = SESSIONS[idx].date;
+  const builtin = SESSIONS[idx].youtube || ['', ''];
   const urls = data[key] || ['', ''];
   // 填回 input 值並渲染嵌入
   [0, 1].forEach(slot => {
