@@ -1,6 +1,120 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
+
+<!-- 引入 Google Fonts 衡山毛筆字型 (或可換成您喜愛的中文書法字型) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
+<!-- 這裡使用開放書法字型作為粗體毛筆字的替代方案，或者您也可以在本地端 CSS 使用自訂的毛筆字型字體 -->
+<style>
+/* --- 英雄頁整體架構 --- */
+.hero-section {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* 佔滿整個螢幕視窗高度 */
+    background: url('hero.png') no-repeat center center/cover; /* 使用您的 hero.png */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    font-family: 'Noto Sans TC', sans-serif;
+}
+
+/* 深色遮罩：確保白色毛筆字在任何背景圖片上都能清晰看見 */
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.55); /* 55% 的黑色半透明遮罩 */
+    z-index: 1;
+}
+
+/* 內容層 */
+.hero-content {
+    position: relative;
+    z-index: 2;
+    color: #ffffff;
+    padding: 0 20px;
+    animation: fadeInUp 1.2s ease-out; /* 登場淡入動畫 */
+}
+
+/* Main Headline: 粗體毛筆字型設定 */
+.hero-title {
+    font-family: 'KouzanBrushFont', 'Ma Shan Zheng', 'KaiTi', 'BiauKai', serif; /* 優先調用毛筆/楷體字型 */
+    font-size: 5rem; /* 超大醒目字體 */
+    font-weight: 900; /* 極粗 */
+    letter-spacing: 12px; /* 字距拉開更有氣勢 */
+    margin-bottom: 20px;
+    text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.8); /* 讓書法字體更有立體深邃感 */
+    color: #fff;
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 3.5rem; /* 手機板自動縮小字體 */
+        letter-spacing: 6px;
+    }
+}
+
+/* 副標題 */
+.hero-subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+    opacity: 0.9;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* 「開始體驗」按鈕設計 */
+.hero-btn {
+    padding: 15px 40px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(135deg, #ff6b6b, #ff8e53); /* 亮眼運動風漸層色 */
+    border: none;
+    border-radius: 50px; /* 圓角膠囊鈕 */
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+    transition: all 0.3s ease;
+    letter-spacing: 2px;
+}
+
+/* 按鈕滑過效果 */
+.hero-btn:hover {
+    transform: translateY(-3px); /* 輕微往上漂浮 */
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+    background: linear-gradient(135deg, #ff8e53, #ff6b6b);
+}
+
+/* 按鈕點擊效果 */
+.hero-btn:active {
+    transform: translateY(1px);
+}
+
+/* 淡入動畫 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+    @import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
+    /* 
+       提示：Ma Shan Zheng 是 Google 提供的簡體毛筆字型，
+       若要在繁體呈現完美的「福星健客」四個字，您也可以直接在 CSS 中設定常用的系統書法字（如 標楷體 加上粗體），
+       或是確保您的 hero.png 背景圖本身就包含這四個設計好的毛筆字。
+       以下程式碼我們採用通用網頁書法風格設計。
+    */
+</style>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
@@ -905,8 +1019,32 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
 
 </style>
 </head>
-<body>
 
+<body>
+  <!-- 1. 英雄頁區塊 (Hero Page) -->
+<section class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <!-- Main Headline: 粗體毛筆字型 -->
+        <h1 class="hero-title">福星健客</h1>
+        <p class="hero-subtitle">揮灑汗水，開啟你的運動旅程</p>
+        
+        <!-- 行動呼籲按鈕 -->
+        <button class="hero-btn" onclick="startExperience()">
+            開始體驗 <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+</section>
+
+<!-- 2. 原本的每週訓練項目頁面 (預設隱藏，點擊按鈕後顯示) -->
+<div id="main-content" style="display: none;">
+    <!-- 這裡放您原本 index.html 裡的所有內容，例如：每週課表、福星晚點名運動紀錄等 -->
+    <main class="container">
+        <h2>每週訓練項目</h2>
+        <!-- 您原本的表格或課表內容... -->
+    </main>
+</div>
+<div id="main-content" style="display:none;">
 <div class="app">
   <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
@@ -956,6 +1094,23 @@ body { background: var(--bg); color: var(--text); font-family: 'Noto Sans TC', s
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
 <script>
+function startExperience() {
+    // 1. 取得原本每週訓練項目的區塊
+    const mainContent = document.getElementById('main-content');
+    
+    // 2. 將其顯示模式改為區塊 (顯示出來)
+    mainContent.style.display = 'block';
+    
+    // 3. 平滑捲動畫面到原本的內容區域
+    mainContent.scrollIntoView({ 
+        behavior: 'smooth', // 平滑捲動效果
+        block: 'start' 
+    });
+    
+    // (選填) 如果您希望點擊後「完全不看見上面的英雄頁」，
+    // 也可以在捲動完成後，加一行程式碼把 hero 區塊移除，
+    // 但通常保留平滑捲動的視覺體驗是最好的。
+}
 const SESSIONS = [
    {
     date: "2026/05/22",
@@ -1605,6 +1760,6 @@ renderSession(0);
   <button class="lightbox-nav lightbox-next" onclick="lbNav(1,event)">›</button>
   <div class="lightbox-caption" id="lightboxCaption"></div>
 </div>
-
+</div>
 </body>
 </html>
